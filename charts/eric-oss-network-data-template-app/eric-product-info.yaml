@@ -1,0 +1,10 @@
+productName: "eric-oss-network-data-template-app"
+productNumber: "CXC 201 0000"
+images:
+  eric-oss-network-data-template-app:
+    productName: "Network data template app image"
+    productNumber: ""
+    registry: "armdocker.rnd.ericsson.se"
+    repoPath: "proj-eric-oss-drop"
+    name: "eric-oss-network-data-template-app"
+    tag: "1.0.2-0"

@@ -1,0 +1,19 @@
+#tosca_definitions_version: Metadata/Tosca.meta
+Description of an APP:
+    APPName: eric-oss-network-data-template-app
+    APPVersion: 1.0.2-0
+    APPType: rApp
+AppComponentList:
+    - NameofComponent: eric-oss-network-data-template-app
+      Version: 1.0.2-0
+      Path: OtherDefinitions/ASD/eric-oss-network-data-template-appASD.yaml
+      ArtefactType: ASD
+    - NameofComponent: eric-oss-network-data-template-app-data-management
+      Version: 2.0.0
+      Path: OtherDefinitions/DataManagement
+      ArtefactType: DataManagement
+APPRoles:
+    - Name: TopologyInventory_Application_ReadOnly
+    - Name: NetworkConfiguration_Application_ReadOnly
+    - Name: Data_Management_Consumer_Application
+    - Name: SchemaRegistry_Consumer_Application_Operator

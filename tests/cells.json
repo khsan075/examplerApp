@@ -1,0 +1,35 @@
+[
+  {
+    "o-ran-smo-teiv-ran:NRCellDU": [
+      {
+        "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR01gNodeBRadio00041,ManagedElement=NR01gNodeBRadio00041,GNBDUFunction=1,NRCellDU=NR01gNodeBRadio00041-1",
+        "sourceIds": [
+          "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR01gNodeBRadio00041,ManagedElement=NR01gNodeBRadio00041,GNBDUFunction=1,NRCellDU=NR01gNodeBRadio00041-1",
+          "urn:cmHandle:AC7D97B0B2E6A7EDCFD4F011A837CAA0"
+        ]
+      }
+    ]
+  },
+  {
+    "o-ran-smo-teiv-ran:NRCellDU": [
+      {
+        "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR01gNodeBRadio00042,ManagedElement=NR01gNodeBRadio00042,GNBDUFunction=1,NRCellDU=NR01gNodeBRadio00042-1",
+        "sourceIds": [
+          "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR01gNodeBRadio00042,ManagedElement=NR01gNodeBRadio00042,GNBDUFunction=1,NRCellDU=NR01gNodeBRadio00042-1",
+          "urn:cmHandle:E802D947B94683F7DA6EB94BCA909974"
+        ]
+      }
+    ]
+  },
+  {
+    "o-ran-smo-teiv-ran:NRCellDU": [
+      {
+        "id": "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR01gNodeBRadio00043,ManagedElement=NR01gNodeBRadio00043,GNBDUFunction=1,NRCellDU=NR01gNodeBRadio00043-1",
+        "sourceIds": [
+          "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR01gNodeBRadio00043,ManagedElement=NR01gNodeBRadio00043,GNBDUFunction=1,NRCellDU=NR01gNodeBRadio00043-1",
+          "urn:cmHandle:C24F24F430246A1AAB264C9704FA7C67"
+        ]
+      }
+    ]
+  }
+]

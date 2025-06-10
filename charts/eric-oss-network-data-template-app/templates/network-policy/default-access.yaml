@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "eric-oss-network-data-template-app.name" . }}-default-access
+  labels:
+    {{- include "eric-oss-network-data-template-app.labels" . | indent 4 }}
+    {{- if .Values.labels }}
+      {{ .Values.labels | toYaml | indent 4 }}
+    {{- end }}
+  annotations:
+  {{- include "eric-oss-network-data-template-app.product-info" . | indent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      app: eric-oss-network-data-template-app
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: eric-eo-api-gateway
+    - podSelector:
+        matchLabels:
+          app: eric-sef-exposure-api-gateway
+    ports:
+    - port: {{ .Values.service.port }}
+

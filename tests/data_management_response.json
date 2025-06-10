@@ -1,0 +1,54 @@
+[
+  {
+    "dataJobName": "4g-pm-event-files-data-job",
+    "dataJobId": 5,
+    "dataConsumerId": "rappid-4-1692626327196-2c145285-388c-4849-a7c5-1f832c09e145",
+    "status": "RUNNING",
+    "isMandatory": "NO",
+    "dataDeliverySchemaId": "4G.4g-pm-event_schema",
+    "dataDelivery": "CONTINUOUS",
+    "dataDeliveryMechanism": "STREAMING_KAFKA",
+    "productionJobDefinition": {
+      "targetSelector": {
+        "nodeNameList": [
+          "SubNetwork=NR,MeContext=NR102gNodeBRadio00010,ManagedElement=NR102gNodeBRadio00010"
+        ]
+      }
+    },
+    "streamingConfigurationKafka": {
+      "topicName": "ctr-processed",
+      "kafkaBootstrapServers": [
+        {
+          "hostname": "bootstrap.example.com",
+          "portAddress": 443
+        }
+      ]
+    }
+  },
+  {
+    "dataJobName": "pm-counter-data-job",
+    "dataJobId": 6,
+    "dataConsumerId": "rappid-4-1692626327196-2c145285-388c-4849-a7c5-1f832c09e145",
+    "status": "RUNNING",
+    "isMandatory": "NO",
+    "dataDeliverySchemaId": "LTE.RAN.PM_COUNTERS.EthernetPort_1",
+    "dataDelivery": "CONTINUOUS",
+    "dataDeliveryMechanism": "STREAMING_KAFKA",
+    "productionJobDefinition": {
+      "targetSelector": {
+        "nodeNameList": [
+          "*ManagedElement=NR102gNodeBRadio1*"
+        ]
+      }
+    },
+    "streamingConfigurationKafka": {
+      "topicName": "eric-oss-3gpp-pm-xml-ran-parser-lte",
+      "kafkaBootstrapServers": [
+        {
+          "hostname": "bootstrap.example.com",
+          "portAddress": 443
+        }
+      ]
+    }
+  }
+]

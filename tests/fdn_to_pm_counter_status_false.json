@@ -1,0 +1,12 @@
+{
+    "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR01gNodeBRadio00042,ManagedElement=NR01gNodeBRadio00042,GNBDUFunction=1,NRCellDU=NR01gNodeBRadio00042-1": false,
+    "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR01gNodeBRadio00044,ManagedElement=NR01gNodeBRadio00044,GNBDUFunction=1,NRCellDU=NR01gNodeBRadio00044-2": false,
+    "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR01gNodeBRadio00046,ManagedElement=NR01gNodeBRadio00046,GNBDUFunction=1,NRCellDU=NR01gNodeBRadio00046-1": false,
+    "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR01gNodeBRadio00046,ManagedElement=NR01gNodeBRadio00046,GNBDUFunction=1,NRCellDU=NR01gNodeBRadio00046-2": false,
+    "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR01gNodeBRadio00046,ManagedElement=NR01gNodeBRadio00046,GNBDUFunction=1,NRCellDU=NR01gNodeBRadio00046-3": false,
+    "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR01gNodeBRadio00043,ManagedElement=NR01gNodeBRadio00043,GNBDUFunction=1,NRCellDU=NR01gNodeBRadio00043-1": false,
+    "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR01gNodeBRadio00041,ManagedElement=NR01gNodeBRadio00041,GNBDUFunction=1,NRCellDU=NR01gNodeBRadio00041-1": false,
+    "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR01gNodeBRadio00047,ManagedElement=NR01gNodeBRadio00047,GNBDUFunction=1,NRCellDU=NR01gNodeBRadio00047-4": false,
+    "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR01gNodeBRadio00047,ManagedElement=NR01gNodeBRadio00047,GNBDUFunction=1,NRCellDU=NR01gNodeBRadio00047-2": false,
+    "urn:3gpp:dn:SubNetwork=Europe,SubNetwork=Ireland,MeContext=NR01gNodeBRadio00045,ManagedElement=NR01gNodeBRadio00045,GNBDUFunction=1,NRCellDU=NR01gNodeBRadio00045-1": false
+  }

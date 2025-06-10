@@ -1,0 +1,10 @@
+asdId: 1
+asdSchemaVersion: 1.0.0
+asdProvider: Ericsson
+asdApplicationName: eric-oss-network-data-template-app
+asdApplicationVersion: 1.0.2-0
+asdApplicationInfoName: Network Data Template Application
+asdInfoDescription: Network Data Template Application for App Onboarding
+deploymentItems:
+    deploymentItemId: 1
+    artifactId: OtherDefinitions/ASD/eric-oss-network-data-template-app-1.0.2-0.tgz

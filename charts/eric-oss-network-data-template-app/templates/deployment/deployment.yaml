@@ -1,0 +1,207 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "eric-oss-network-data-template-app.name" . }}
+  labels:
+    {{- include "eric-oss-network-data-template-app.labels" . | indent 4 }}
+    {{- if .Values.labels }}
+      {{ .Values.labels | toYaml | indent 4 }}
+    {{- end }}
+  annotations:
+    {{- include "eric-oss-network-data-template-app.product-info" . | indent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "eric-oss-network-data-template-app.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  strategy:
+    type: {{ .Values.updateStrategy.type }}
+    {{- if and (eq .Values.updateStrategy.type "RollingUpdate") .Values.updateStrategy.rollingUpdate }}
+    rollingUpdate:
+{{- if .Values.updateStrategy.rollingUpdate.maxUnavailable }}
+      maxUnavailable: {{ .Values.updateStrategy.rollingUpdate.maxUnavailable }}
+{{- end }}
+{{- if .Values.updateStrategy.rollingUpdate.maxSurge }}
+      maxSurge: {{ .Values.updateStrategy.rollingUpdate.maxSurge }}
+{{- end }}
+    {{- end }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "eric-oss-network-data-template-app.name" . }}
+        app.kubernetes.io/name: {{ include "eric-oss-network-data-template-app.name" . }}
+        app.kubernetes.io/version: {{ include "eric-oss-network-data-template-app.version" . }}
+        helm.sh/chart: {{ template "eric-oss-network-data-template-app.chart" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        service.cleartext/scraping: "true"
+      annotations:
+        {{- if not (semverCompare ">=1.30.0" .Capabilities.KubeVersion.GitVersion) }}
+        container.apparmor.security.beta.kubernetes.io/eric-oss-network-data-template-app: {{ include "eric-oss-network-data-template-app.appArmorProfileAnnotation" . | default "runtime/default" }}
+        {{- end }}
+        prometheus.io/port: "{{ .Values.service.port }}"
+        prometheus.io/scrape: "{{ .Values.prometheus.scrape }}"
+        prometheus.io/path: "{{ .Values.prometheus.path }}"
+{{- include "eric-oss-network-data-template-app.product-info" . | indent 8 }}
+    spec:
+      automountServiceAccountToken: false
+      {{- if (index .Values "podPriority" "eric-oss-network-data-template-app" "priorityClassName") }}
+      priorityClassName: {{ (index .Values "podPriority" "eric-oss-network-data-template-app" "priorityClassName") }}
+      {{- end }}
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ include "eric-oss-network-data-template-app.name" . }}
+            items:
+              - key: LOG_CTRL_FILE
+                path: logcontrol.json
+        - name: platform-cacerts
+          secret:
+            secretName: {{ index .Values "platformCaCertSecretName" | quote }}
+            defaultMode: 420
+        - name: app-certs
+          secret:
+            secretName: {{ index .Values "appSecretName" | quote }}
+            defaultMode: 420
+        - name: kafka-cacerts
+          secret:
+            secretName: {{ index .Values "kafkaCaCertSecretName" | quote }}
+            defaultMode: 420
+      securityContext:
+        fsGroup: {{include "eric-oss-network-data-template-app.fsGroup" .}}
+      hostPID: false
+      hostIPC: false
+      hostNetwork: false
+      containers:
+        - name: eric-oss-network-data-template-app
+          image: {{ template "eric-oss-network-data-template-app.imagePath" (dict "imageId" "eric-oss-network-data-template-app" "values" .Values "files" .Files) }}
+          imagePullPolicy: {{ include "eric-oss-network-data-template-app.registryImagePullPolicy" . | quote }}
+          securityContext:
+            {{- if semverCompare ">=1.30.0" .Capabilities.KubeVersion.GitVersion }}
+            appArmorProfile:
+              type: {{ include "eric-oss-network-data-template-app.appArmorProfile.type" . | default "RuntimeDefault" }}
+            {{- end }}
+            allowPrivilegeEscalation: false
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+              - all
+            {{- include "eric-oss-network-data-template-app.seccomp-profile" . | indent 12 }}
+            procMount: Default
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/adp
+            - name: platform-cacerts
+              mountPath: {{ index .Values "platformCaCertMountPath" | default .Values.instantiationDefaults.platformCaCertMountPath | quote }}
+              readOnly: true
+            - name: app-certs
+              mountPath: {{ index .Values "appCertMountPath" | default .Values.instantiationDefaults.appCertMountPath | quote }}
+              readOnly: true
+            - name: kafka-cacerts
+              mountPath: {{ index .Values "kafkaCaCertMountPath" | default .Values.instantiationDefaults.kafkaCaCertMountPath | quote }}
+              readOnly: true
+          env:
+            - name: IAM_CLIENT_ID
+              value: {{ index .Values "clientId" | quote }}
+            - name: IAM_CLIENT_SECRET
+              value: {{ index .Values "clientSecret" | quote }}
+            - name: IAM_BASE_URL
+              value: {{ index .Values "iamBaseUrl" | quote }}
+            - name: LOG_ENDPOINT
+              value: {{ index .Values "logEndpoint" | quote }}
+            - name: CA_CERT_FILE_PATH
+              value: {{ index .Values "platformCaCertMountPath" | default .Values.instantiationDefaults.platformCaCertMountPath | quote }}
+            - name: CA_CERT_FILE_NAME
+              value:  {{ index .Values "platformCaCertFileName" | quote }}
+            - name: APP_KEY
+              value: {{ index .Values "appKeyFileName" | quote }}
+            - name: APP_CERT
+              value: {{ index .Values "appCertFileName" | quote }}
+            - name: APP_CERT_FILE_PATH
+              value: {{ index .Values "appCertMountPath" | default .Values.instantiationDefaults.appCertMountPath | quote }}
+            - name: KAFKA_CERT_MOUNT_PATH
+              value: {{ index .Values "kafkaCaCertMountPath" | default .Values.instantiationDefaults.kafkaCaCertMountPath | quote }}
+            - name: KAFKA_CERT_FILE_NAME
+              value: {{ index .Values "kafkaCaCertFileName" | default .Values.instantiationDefaults.kafkaCaCertFileName | quote }}
+            - name: CONSUMER_MESSAGE_BATCH_SIZE
+              value: {{ index .Values "consumerMessageBatchSize" | default .Values.instantiationDefaults.consumerMessageBatchSize | quote }}
+            - name: CONSUMER_TIMEOUT
+              value: {{ index .Values "consumerTimeout" | default .Values.instantiationDefaults.consumerTimeout | quote }}
+            - name: SERVICE_NAME
+              value: {{ .Chart.Name }}
+            - name: CONTAINER_NAME
+              value: {{ .Chart.Name }}
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_UID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.uid
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: TZ
+              value: {{ template "eric-oss-network-data-template-app.timezone" . }}
+            - name: LOG_CTRL_FILE
+              value: "/etc/adp/logcontrol.json"
+            {{- include "eric-oss-network-data-template-app.jaegerEnv" . | indent 12 }}
+          ports:
+            - name: http-metrics
+              containerPort: 8050
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /network-data-template-app/health/liveness
+              port: 8050
+          {{- if (index .Values "probes" "eric-oss-network-data-template-app" "livenessProbe" "initialDelaySeconds") }}
+            {{ print "initialDelaySeconds: " (index .Values "probes" "eric-oss-network-data-template-app" "livenessProbe" "initialDelaySeconds") }}
+          {{- end }}
+          {{- if (index .Values "probes" "eric-oss-network-data-template-app" "livenessProbe" "failureThreshold") }}
+            {{ print "failureThreshold: " (index .Values "probes" "eric-oss-network-data-template-app" "livenessProbe" "failureThreshold") }}
+          {{- end }}
+          {{- if (index .Values "probes" "eric-oss-network-data-template-app" "livenessProbe" "periodSeconds") }}
+            {{ print "periodSeconds: " (index .Values "probes" "eric-oss-network-data-template-app" "livenessProbe" "periodSeconds") }}
+          {{- end }}
+          {{- if (index .Values "probes" "eric-oss-network-data-template-app" "livenessProbe" "timeoutSeconds") }}
+            {{ print "timeoutSeconds: " (index .Values "probes" "eric-oss-network-data-template-app" "livenessProbe" "timeoutSeconds") }}
+          {{- end }}
+          readinessProbe:
+            httpGet:
+              path: /network-data-template-app/health/readiness
+              port: 8050
+          {{- if (index .Values "probes" "eric-oss-network-data-template-app" "readinessProbe" "initialDelaySeconds") }}
+            {{ print "initialDelaySeconds: " (index .Values "probes" "eric-oss-network-data-template-app" "readinessProbe" "initialDelaySeconds") }}
+          {{- end }}
+          {{- if (index .Values "probes" "eric-oss-network-data-template-app" "readinessProbe" "failureThreshold") }}
+            {{ print "failureThreshold: " (index .Values "probes" "eric-oss-network-data-template-app" "readinessProbe" "failureThreshold") }}
+          {{- end }}
+          {{- if (index .Values "probes" "eric-oss-network-data-template-app" "readinessProbe" "periodSeconds") }}
+            {{ print "periodSeconds: " (index .Values "probes" "eric-oss-network-data-template-app" "readinessProbe" "periodSeconds") }}
+          {{- end }}
+          {{- if (index .Values "probes" "eric-oss-network-data-template-app" "readinessProbe" "timeoutSeconds") }}
+            {{ print "timeoutSeconds: " (index .Values "probes" "eric-oss-network-data-template-app" "readinessProbe" "timeoutSeconds") }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources.networkDataTemplateApp | nindent 12 }}
+      {{- if include "eric-oss-network-data-template-app.pullSecrets" . }}
+      imagePullSecrets:
+        - name: {{ template "eric-oss-network-data-template-app.pullSecrets" . }}
+      {{- end }}
+      terminationGracePeriodSeconds: {{ include "eric-oss-network-data-template-app.terminationGracePeriodSeconds" . }}
+      {{- if .Values.tolerations }}
+      tolerations:
+        {{- include "eric-oss-network-data-template-app.tolerations" . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity: {{- toYaml . | indent 8 }}
+      {{- end }}
+      nodeSelector: {{ include "eric-oss-network-data-template-app.nodeSelector" . | nindent 6 -}}
